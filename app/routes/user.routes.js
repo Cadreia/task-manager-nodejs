@@ -12,17 +12,25 @@ module.exports = function(app) {
 
   app.get("/api/test/all", controller.allAccess);
 
+  /***** auth protected routes *****/
   app.get("/api/test/user", [authJwt.verifyToken], controller.userBoard);
+  app.get("/api/groups", [authJwt.verifyToken], controller.allGroups);
+  app.get("/api/mygroups", [authJwt.verifyToken], controller.myGroups);
+  app.get("/api/invitations", [authJwt.verifyToken], controller.invitations);
+  app.get("/api/requests", [authJwt.verifyToken], controller.requests);
 
-  app.get(
-    "/api/test/mod",
-    [authJwt.verifyToken, authJwt.isModerator],
-    controller.moderatorBoard
-  );
+  // app.get(
+  //   "/api/test/mod",
+  //   [authJwt.verifyToken, authJwt.isModerator],
+  //   controller.moderatorBoard
+  // );
 
+  /***** admin protected routes *****/
   app.get(
     "/api/test/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   );
+  app.get("/api/users", [authJwt.verifyToken, authJwt.isAdmin], controller.allUsers);
+  app.get("/api/admins", [authJwt.verifyToken, authJwt.isAdmin], controller.allAdmins);
 };
